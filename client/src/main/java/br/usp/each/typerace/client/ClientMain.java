@@ -15,7 +15,7 @@ public class ClientMain {
 
     public void init(String idCliente) {
         System.out.println("Iniciando cliente: " + idCliente);
-        // TODO: Implementar
+        client.connect();
     }
 
     public static void main(String[] args) {
@@ -24,7 +24,7 @@ public class ClientMain {
            Como podemos fazer para que o cliente receba um parâmetro indicando a qual servidor
            ele deve se conectar e o seu ID?
         */
-        String removeMe = "wss://localhost:8080";
+        String removeMe = "ws://localhost:8080";
         String removeMe2 = "idCliente";
 
         try {

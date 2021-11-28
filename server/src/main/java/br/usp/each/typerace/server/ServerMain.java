@@ -33,7 +33,7 @@ public class ServerMain {
             String in = input.readLine();
             server.broadcast(in);
 
-            if(in.equals("exit")){
+            if(in != null && in.equals("exit")){
                 server.stop(1000);
                 break;
             }
