@@ -18,26 +18,35 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        // TODO: Implementar
+        conn.send("Bem-vindo a Corridona de Digitacao do Balacubaco!");
+        broadcast("Nova conexao: " + handshake.getResourceDescriptor() + "\nNumero de jogadores: X");
+        System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + "entrou na sala!");
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        // TODO: Implementar
+        broadcast(conn + "saiu da sala!");
+        System.out.println(conn + "saiu da sala!");
     }
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        // TODO: Implementar
+        broadcast(message);
+        System.out.println(conn + ": " + message);
     }
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        // TODO: Implementar
+        ex.printStackTrace();
+        if (conn != null) {
+            System.out.printf("Ih rapa, deu ruim");
+        }
     }
 
     @Override
     public void onStart() {
-        // TODO: Implementar
+        System.out.println("Servidor acordou!");
+        setConnectionLostTimeout(0);
+        setConnectionLostTimeout(100);
     }
 }

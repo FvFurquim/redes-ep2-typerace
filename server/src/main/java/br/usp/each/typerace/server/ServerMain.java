@@ -2,6 +2,9 @@ package br.usp.each.typerace.server;
 
 import org.java_websocket.server.WebSocketServer;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 public class ServerMain {
@@ -13,16 +16,29 @@ public class ServerMain {
     }
 
     public void init() {
-        System.out.println("Iniciando servidor...");
-        // TODO: Implementar
+        server.start();
+        System.out.println("Servidor iniciado na porta " + server.getPort());
     }
 
-    public static void main(String[] args) {
-        WebSocketServer server = new Server(8080, new HashMap<>());
+    public static void main(String[] args) throws InterruptedException, IOException {
 
+        WebSocketServer server = new Server(8080, new HashMap<>());
         ServerMain main = new ServerMain(server);
 
         main.init();
-    }
 
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+
+        while(true) {
+            String in = input.readLine();
+            server.broadcast(in);
+
+            if(in.equals("exit")){
+                server.stop(1000);
+                break;
+            }
+        }
+
+        System.out.println("Servidor finalizado");
+    }
 }
