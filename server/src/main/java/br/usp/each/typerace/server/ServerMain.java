@@ -17,17 +17,27 @@ public class ServerMain {
 
     public void init() {
         server.start();
-        System.out.println("Servidor iniciado na porta " + server.getPort());
+        System.out.println("\nServidor iniciado na porta " + server.getPort());
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
-        WebSocketServer server = new Server(8080, new HashMap<>());
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+
+        System.out.println("Porta do servidor [default: 8080]: ");
+        String portStr = input.readLine();
+
+        int port;
+
+        if (portStr.isEmpty())
+            port = 8080;
+        else
+            port = Integer.parseInt(portStr);
+
+        WebSocketServer server = new Server(port, new HashMap<>());
         ServerMain main = new ServerMain(server);
 
         main.init();
-
-        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
         while(true) {
             String in = input.readLine();
@@ -39,6 +49,6 @@ public class ServerMain {
             }
         }
 
-        System.out.println("Servidor finalizado");
+        System.out.println("\nServidor finalizado");
     }
 }

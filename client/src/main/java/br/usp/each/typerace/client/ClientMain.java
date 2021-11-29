@@ -2,8 +2,12 @@ package br.usp.each.typerace.client;
 
 import org.java_websocket.client.WebSocketClient;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
 public class ClientMain {
 
@@ -18,21 +22,31 @@ public class ClientMain {
         client.connect();
     }
 
-    public static void main(String[] args) {
-        /*
-           FIXME: Remover essas strings fixas
-           Como podemos fazer para que o cliente receba um parâmetro indicando a qual servidor
-           ele deve se conectar e o seu ID?
-        */
-        String removeMe = "ws://localhost:8080";
-        String removeMe2 = "idCliente";
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+
+        System.out.print("\nServidor [default: ws://localhost:8080]: ");
+        String serverUri = input.readLine();
+
+        if (serverUri.isEmpty())
+            serverUri = "ws://localhost:8080";
+
+        System.out.print("\nNome de Usuario [default: codigo doido]: ");
+        String username = input.readLine();
+
+        serverUri = serverUri + "/playerId=" + username;
+
+        if (username.isEmpty())
+            username = "" + UUID.randomUUID();
 
         try {
-            WebSocketClient client = new Client(new URI(removeMe));
+            WebSocketClient client = new Client(new URI(serverUri));
 
             ClientMain main = new ClientMain(client);
 
-            main.init(removeMe2);
+            main.init(username);
+
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
