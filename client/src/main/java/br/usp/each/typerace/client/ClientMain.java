@@ -47,6 +47,11 @@ public class ClientMain {
 
             main.init(username);
 
+            while(true) {
+                String in = input.readLine();
+                client.send(in);
+            }
+
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
