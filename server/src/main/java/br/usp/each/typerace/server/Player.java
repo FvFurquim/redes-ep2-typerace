@@ -42,6 +42,9 @@ public class Player {
     }
 
     public int compareTo(Player p) {
+        if(this.correct == p.correct)
+            return p.wrong - this.wrong;
+
         return this.correct - p.correct;
     }
 

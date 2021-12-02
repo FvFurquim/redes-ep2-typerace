@@ -2,10 +2,9 @@
 Repositório para o EP2 de Redes de Computadores, EACH-USP - 2021/2
 
 # Integrantes
-* Integrante 1 - 1111111
-* Integrante 2 - 2222222
-* Integrante 3 - 3333333
-* Integrante 4 - 4444444
+* Felipe Voigtlaender Furquim - 11208030
+* Stefany Ramos Ramsdorf Nohama - 10843552
+* Vitor da Silva Cairolli - 11276617
 
 ## Pré-requisitos
 * JDK 11 ou maior (testado com a JDK11 OpenJDK)

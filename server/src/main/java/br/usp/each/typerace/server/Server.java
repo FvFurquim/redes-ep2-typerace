@@ -8,11 +8,13 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Server extends WebSocketServer {
 
     private final Map<String, WebSocket> connections;
     private TypeRacer game;
+    private final String line = "----------------------------------------------------------";
 
     public Server(int port, Map<String, WebSocket> connections) {
         super(new InetSocketAddress(port));
@@ -21,71 +23,83 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        conn.send("Bem-vindo a Corridona de Digitacao do Balacubaco!\n");
 
         String playerId = getPlayerId(handshake.getResourceDescriptor());
-
         addConnection(playerId, conn);
 
-        broadcast("Nova conexao: " + playerId + "\nNumero de jogadores: " + numberOfConnections());
-        System.out.println(playerId + "[" + conn.getRemoteSocketAddress().getAddress().getHostAddress() + "] entrou na sala!");
+        broadcast(playerId + " entrou na sala!" + "\nNumero de jogadores: " + numberOfConnections() + "\n" + line);
+
+        conn.send("Bem-vindo a Corridona de Digitacao do Balacubaco!\nRegras:\n" +
+                "- Palavras podem ser maiusculas ou minusculas\n- Envie uma palavra por vez\n- Vence quem atingir a pontuacao maxima primeiro" +
+                "\n- Palavras erradas nao tiram ponto\n- Digite \"Sair\" fora de uma partida para sair da sala\n- Digite \"Iniciar [quantidade de palavras] [pontuacao maxima]\" para comecar\n\n- Divirta-se :)" + line);
+
+        System.out.println("Nova conexao: " + playerId + " [" + conn.getRemoteSocketAddress().getAddress().getHostAddress() + "]");
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        broadcast(getPlayerId(conn.getResourceDescriptor()) + " saiu da sala!");
-        System.out.println(getPlayerId(conn.getResourceDescriptor()) + "[" + conn.getRemoteSocketAddress().getAddress().getHostAddress() + "] saiu da sala!");
+        broadcast(getPlayerId(conn.getResourceDescriptor()) + " saiu da sala!\n" + line);
+        System.out.println("Conexao perdida: " + getPlayerId(conn.getResourceDescriptor()) + " [" + conn.getRemoteSocketAddress().getAddress().getHostAddress() + "]");
     }
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-//        broadcast(message);
-//        System.out.println(getPlayerId(conn.getResourceDescriptor()) + ": " + message);
 
-        if (message.equalsIgnoreCase("Iniciar") && game == null) {
+        if(game == null) {
 
-            String dir = "D:\\fvfur\\Documents\\Programas\\Github\\redes-ep2-typerace\\server\\src\\main\\java\\br\\usp\\each\\typerace\\server";
-            game = new TypeRacer(connections.keySet(), dir + "\\listaDePalavras.txt", 10, 3);
+            String[] inputArray = message.split(" ");
 
-            String wordList = "";
-            for (String word : game.getSelectedWords()) {
-                wordList += word + " ";
+            if (inputArray[0].equalsIgnoreCase("Iniciar")) {
+                try {
+                    int numberOfWords = Integer.parseInt(inputArray[1]);
+                    int maxScore = Integer.parseInt(inputArray[2]);
+
+                    if(maxScore > numberOfWords) {
+                        conn.send("A pontuacao maxima nao pode ser maior do que a quantidade de palavras no jogo!\nPor favor, tente novamente!\n" + line);
+                    }
+                    else {
+                        String dir = System.getProperty("user.dir") + "\\src\\main\\resources";;
+                        game = new TypeRacer(connections.keySet(), dir + "\\listaDePalavras.txt", numberOfWords, maxScore);
+
+                        String wordList = setToWordList(game.getSelectedWords());
+                        broadcast("Jogo iniciado! Lista de palavras:\n" + wordList + "\n" + line);
+                    }
+                }
+                catch (Exception e) {
+                    conn.send("Comando invalido!\nPor favor, tente novamente!\n" + line);
+                }
             }
-
-            broadcast("Jogo iniciado! Lista de palavras:\n" + wordList);
+            else if (message.equalsIgnoreCase("Sair")) {
+                removeConnection(conn);
+            }
+            else {
+                conn.send("Comando invalido!\nPor favor, tente novamente!\n" + line);
+            }
         }
-        else if (message.equalsIgnoreCase("Sair") && game == null) {
-            removeConnection(conn);
-        }
-        else if(game != null) {
+        else {
             String playerId = getPlayerId(conn.getResourceDescriptor());
 
             if(game.checkAnswer(playerId, message)) {
-                conn.send("Resposta correta!\n");
+                conn.send("Resposta correta!\n" + line);
             }
             else {
-                conn.send("Resposta incorreta :(\n");
+                conn.send("Resposta incorreta :(\n" + line);
             }
 
             if(game.isGameFinished()) {
-
-                String result = "\nJogo encerrado!\nPlacar [Nome - Acertos - Erros]:\n";
+                String result = "Jogo encerrado!\nPlacar [Nome - Acertos - Erros]:\n";
                 int count = 0;
                 for(Player player : game.getScoreBoard()) {
                     result += (++count) + "- " + player + "\n";
                 }
 
-                result += "Duracao do jogo: " + game.gameDuration() + " s\n";
-
+                result += "\nDuracao do jogo: " + game.gameDuration() + " s\n" + line;
                 broadcast(result);
+
                 game = null;
             }
             else {
-                String remainingWords = "";
-                for (String word : game.getWordsOfPlayer(playerId)) {
-                    remainingWords += word + " ";
-                }
-
+                String remainingWords = setToWordList(game.getWordsOfPlayer(playerId)) + "\n" + line;
                 conn.send(remainingWords);
             }
         }
@@ -95,13 +109,13 @@ public class Server extends WebSocketServer {
     public void onError(WebSocket conn, Exception ex) {
         ex.printStackTrace();
         if (conn != null) {
-            System.out.printf("Ih rapa, deu ruim");
+            System.out.println("Ih rapa, deu ruim");
         }
     }
 
     @Override
     public void onStart() {
-        System.out.println("Servidor acordou!");
+        System.out.println("Servidor iniciado na porta " + getPort());
         setConnectionLostTimeout(0);
         setConnectionLostTimeout(100);
     }
@@ -116,5 +130,15 @@ public class Server extends WebSocketServer {
 
     private String getPlayerId(String resourceDescriptor) {
         return resourceDescriptor.substring(resourceDescriptor.indexOf("playerId=") + 9);
+    }
+
+    private String setToWordList(Set<String> set) {
+
+        String wordList = "| ";
+        for (String word : set) {
+            wordList += word + " | ";
+        }
+
+        return wordList;
     }
 }

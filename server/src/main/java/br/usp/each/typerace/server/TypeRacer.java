@@ -7,6 +7,9 @@ import java.util.*;
 
 public class TypeRacer {
 
+    private static String filePath = "";
+    private static List<String> allWords;
+
     private Map<String, Player> scoreBoard;
     private Set<String> selectedWords;
     private int maxScore;
@@ -21,36 +24,40 @@ public class TypeRacer {
         this.isGameFinished = false;
         this.initialTime = new Date().getTime();
 
-        List<String> allWords = new ArrayList<>();
         selectedWords = new HashSet<>();
 
-        try {
-            BufferedReader input = new BufferedReader(new FileReader(filePath));
+        if (!filePath.equals(TypeRacer.filePath)) {
 
-            String line;
-            while ((line = input.readLine()) != null) {
-                allWords.add(line);
-            }
+            TypeRacer.filePath = filePath;
+            allWords = new ArrayList<>();
 
-            Random rand = new Random();
+            try {
+                BufferedReader input = new BufferedReader(new FileReader(filePath));
 
-            for (int i = 0; i < numberOfWords; ) {
-                int randNum = rand.nextInt(allWords.size());
-                String selectedWord = allWords.get(randNum);
-
-                if (!selectedWords.contains(selectedWord)) {
-                    selectedWords.add(selectedWord);
-                    i++;
+                String line;
+                while ((line = input.readLine()) != null) {
+                    allWords.add(line);
                 }
-            }
-
-            for (String playerId : players) {
-                scoreBoard.put(playerId, new Player(playerId, 0, 0, new HashSet<>(selectedWords)));
+            } catch (Exception e) {
+                System.out.println("Algo deu errado");
+                e.printStackTrace();
             }
         }
-        catch(Exception e) {
-            System.out.println("Algo deu errado");
-            e.printStackTrace();
+
+        Random rand = new Random();
+
+        for (int i = 0; i < numberOfWords; ) {
+            int randNum = rand.nextInt(allWords.size());
+            String selectedWord = allWords.get(randNum);
+
+            if (!selectedWords.contains(selectedWord)) {
+                selectedWords.add(selectedWord);
+                i++;
+            }
+        }
+
+        for (String playerId : players) {
+            scoreBoard.put(playerId, new Player(playerId, 0, 0, new HashSet<>(selectedWords)));
         }
     }
 

@@ -16,8 +16,8 @@ public class ServerMain {
     }
 
     public void init() {
+        System.out.println("Iniciando servidor...");
         server.start();
-        System.out.println("\nServidor iniciado na porta " + server.getPort());
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
@@ -41,9 +41,9 @@ public class ServerMain {
 
         while(true) {
             String in = input.readLine();
-            server.broadcast(in);
+//            server.broadcast(in);
 
-            if(in != null && in.equals("exit")){
+            if(in != null && in.equals("encerrar")){
                 server.stop(1000);
                 break;
             }

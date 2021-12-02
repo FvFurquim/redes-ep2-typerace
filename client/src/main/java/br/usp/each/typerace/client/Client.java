@@ -13,20 +13,19 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        send("Hello");
-        System.out.println("Abriu uma conexao");
+//        send("###Nova conexao!###");
+        System.out.println("----------------------------------------------------------\nVoce entrou na sala!");
     }
 
     @Override
     public void onMessage(String message) {
-        System.out.println("Recebeu: " + message);
+        System.out.println(message);
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("Connection closed by " +
-                (remote ? "remote peer" : "us") +
-                " Code: " + code + " Reason: " + reason);
+        System.out.println("Conexao encerrada!");
+        System.exit(0);
     }
 
     @Override
