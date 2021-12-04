@@ -25,13 +25,20 @@ public class Server extends WebSocketServer {
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
 
         String playerId = getPlayerId(handshake.getResourceDescriptor());
+
+        if(connections.containsKey(playerId)) {
+            conn.send("Nome de usuario ja existe!\nPor favor, insira um nome diferente\n" + line);
+            conn.close(1000, "invalidName");
+            return;
+        }
+
         addConnection(playerId, conn);
 
-        broadcast(playerId + " entrou na sala!" + "\nNumero de jogadores: " + numberOfConnections() + "\n" + line);
+        broadcast("\n" + line + "\n" + playerId + " entrou na sala!" + "\nNumero de jogadores: " + numberOfConnections() + "\n" + line);
 
         conn.send("Bem-vindo a Corridona de Digitacao do Balacubaco!\nRegras:\n" +
                 "- Palavras podem ser maiusculas ou minusculas\n- Envie uma palavra por vez\n- Vence quem atingir a pontuacao maxima primeiro" +
-                "\n- Palavras erradas nao tiram ponto\n- Digite \"Sair\" fora de uma partida para sair da sala\n- Digite \"Iniciar [quantidade de palavras] [pontuacao maxima]\" para comecar\n\n- Divirta-se :)" + line);
+                "\n- Palavras erradas nao tiram ponto\n- Digite \"Sair\" fora de uma partida para sair da sala\n- Digite \"Iniciar [quantidade de palavras] [pontuacao maxima]\" para comecar\n\n- Divirta-se :)\n" + line);
 
         System.out.println("Nova conexao: " + playerId + " [" + conn.getRemoteSocketAddress().getAddress().getHostAddress() + "]");
     }
@@ -66,14 +73,14 @@ public class Server extends WebSocketServer {
                     }
                 }
                 catch (Exception e) {
-                    conn.send("Comando invalido!\nPor favor, tente novamente!\n" + line);
+                    conn.send("Comando invalido!\nPor favor, tente novamente!\nLembre-se de digitar: Iniciar [quantidade de palavras] [pontuacao maxima]\n" + line);
                 }
             }
             else if (message.equalsIgnoreCase("Sair")) {
-                removeConnection(conn);
+                conn.close();
             }
             else {
-                conn.send("Comando invalido!\nPor favor, tente novamente!\n" + line);
+                conn.send("Comando invalido!\nPor favor, tente novamente!\n" + line + "\n");
             }
         }
         else {

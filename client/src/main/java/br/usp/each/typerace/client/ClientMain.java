@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class ClientMain {
 
@@ -18,42 +19,49 @@ public class ClientMain {
     }
 
     public void init(String idCliente) {
-        System.out.println("Iniciando cliente: " + idCliente);
+//        System.out.println("Iniciando cliente: " + idCliente);
         client.connect();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
 
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+        WebSocketClient client;
 
-        System.out.print("\nServidor [default: ws://localhost:8080]: ");
+        System.out.println("\nServidor [default: ws://localhost:8080]: ");
         String serverUri = input.readLine();
 
         if (serverUri.isEmpty())
             serverUri = "ws://localhost:8080";
 
-        System.out.print("\nNome de Usuario [default: codigo doido]: ");
-        String username = input.readLine();
+        while(true) {
+            System.out.println("Nome de Usuario: ");
+            String username = input.readLine();
+            String connectionUri = serverUri;
 
-        serverUri = serverUri + "/playerId=" + username;
+            if (username.isEmpty()) {
+                System.out.println("Nome vazio! Por favor, tente novamente!");
+                continue;
+            }
 
-        if (username.isEmpty())
-            username = "" + UUID.randomUUID();
+            connectionUri += "/playerId=" + username;
 
-        try {
-            WebSocketClient client = new Client(new URI(serverUri));
+            client = new Client(new URI(connectionUri));
 
             ClientMain main = new ClientMain(client);
 
             main.init(username);
 
-            while(true) {
-                String in = input.readLine();
-                client.send(in);
-            }
+            TimeUnit.SECONDS.sleep(1);
 
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+            if(client.isOpen()) {
+                break;
+            }
+        }
+
+        while(true) {
+            String in = input.readLine();
+            client.send(in);
         }
     }
 }

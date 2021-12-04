@@ -41,7 +41,6 @@ public class ServerMain {
 
         while(true) {
             String in = input.readLine();
-//            server.broadcast(in);
 
             if(in != null && in.equals("encerrar")){
                 server.stop(1000);
