@@ -103,10 +103,6 @@ public class Server extends WebSocketServer {
         setConnectionLostTimeout(100);
     }
 
-    private void addConnection(String playerId, WebSocket conn) {
-        this.connections.put(playerId, conn);
-    }
-
     public int numberOfConnections() {
         return connections.size();
     }
@@ -120,20 +116,19 @@ public class Server extends WebSocketServer {
     }
 
     private boolean playerIdExists(WebSocket conn) {
-
         if(connections.containsKey(getPlayerId(conn))) {
             conn.send("Nome de usuario ja existe!\nPor favor, insira um nome diferente\n" + line);
             conn.close(1000, "invalidName");
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     private void addNewConnection(WebSocket conn) {
 
         String playerId = getPlayerId(conn);
-        addConnection(playerId, conn);
+        this.connections.put(playerId, conn);
 
         broadcast("\n" + line + "\n" + playerId + " entrou na sala!" + "\nNumero de jogadores: " + numberOfConnections() + "\n" + line);
 
