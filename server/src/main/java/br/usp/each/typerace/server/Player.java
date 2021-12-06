@@ -5,10 +5,10 @@ import java.util.Set;
 
 public class Player {
 
-    private String playerId;
+    private final String playerId;
     private int correct;
     private int wrong;
-    private Set<String> currentWords;
+    private final Set<String> currentWords;
 
     public Player(String playerId, int correct, int wrong, Set<String> currentWords) {
         this.playerId = playerId;

@@ -42,7 +42,7 @@ public class ServerMain {
         while(true) {
             String in = input.readLine();
 
-            if(in != null && in.equals("encerrar")){
+            if(in != null && in.equalsIgnoreCase("encerrar")){
                 server.stop(1000);
                 break;
             }

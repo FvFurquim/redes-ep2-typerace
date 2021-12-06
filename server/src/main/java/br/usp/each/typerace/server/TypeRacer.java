@@ -1,18 +1,12 @@
 package br.usp.each.typerace.server;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 public class TypeRacer {
 
-    private static String filePath = "";
-    private static List<String> allWords;
-
-    private Map<String, Player> scoreBoard;
-    private Set<String> selectedWords;
-    private int maxScore;
+    private final Map<String, Player> scoreBoard;
+    private final Set<String> selectedWords;
+    private final int maxScore;
     private boolean isGameFinished;
     private long initialTime;
     private long finalTime;
@@ -24,37 +18,9 @@ public class TypeRacer {
         this.isGameFinished = false;
         this.initialTime = new Date().getTime();
 
-        selectedWords = new HashSet<>();
+        WordListMaker wordListMaker = new WordListMaker(filePath);
 
-        if (!filePath.equals(TypeRacer.filePath)) {
-
-            TypeRacer.filePath = filePath;
-            allWords = new ArrayList<>();
-
-            try {
-                BufferedReader input = new BufferedReader(new FileReader(filePath));
-
-                String line;
-                while ((line = input.readLine()) != null) {
-                    allWords.add(line);
-                }
-            } catch (Exception e) {
-                System.out.println("Algo deu errado");
-                e.printStackTrace();
-            }
-        }
-
-        Random rand = new Random();
-
-        for (int i = 0; i < numberOfWords; ) {
-            int randNum = rand.nextInt(allWords.size());
-            String selectedWord = allWords.get(randNum);
-
-            if (!selectedWords.contains(selectedWord)) {
-                selectedWords.add(selectedWord);
-                i++;
-            }
-        }
+        selectedWords = wordListMaker.selectWords(numberOfWords);
 
         for (String playerId : players) {
             scoreBoard.put(playerId, new Player(playerId, 0, 0, new HashSet<>(selectedWords)));
@@ -92,7 +58,7 @@ public class TypeRacer {
     public List<Player> getScoreBoard() {
 
         List<Player> sortedScore = new LinkedList<>(scoreBoard.values());
-        Collections.sort(sortedScore, (a,b) -> b.compareTo(a));
+        sortedScore.sort((a,b) -> b.compareTo(a));
 
         return sortedScore;
     }
