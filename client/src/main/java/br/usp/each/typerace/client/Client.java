@@ -24,11 +24,10 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        if(reason.equalsIgnoreCase("invalidName"))
-            return;
-
-        System.out.println("Conexao encerrada!");
-        System.exit(0);
+        if(!reason.equalsIgnoreCase("invalidName")) {
+            System.out.println("Conexao encerrada!");
+            System.exit(0);
+        }
     }
 
     @Override

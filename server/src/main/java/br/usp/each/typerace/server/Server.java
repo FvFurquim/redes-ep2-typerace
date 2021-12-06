@@ -29,9 +29,11 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        connections.remove(getPlayerId(conn));
-        broadcast(getPlayerId(conn.getResourceDescriptor()) + " saiu da sala!\n" + line);
-        System.out.println("Conexao perdida: " + getPlayerId(conn.getResourceDescriptor()) + " [" + conn.getRemoteSocketAddress().getAddress().getHostAddress() + "]");
+        if(!reason.equalsIgnoreCase("invalidName")) {
+            connections.remove(getPlayerId(conn));
+            broadcast(getPlayerId(conn.getResourceDescriptor()) + " saiu da sala!\n" + line);
+            System.out.println("Conexao perdida: " + getPlayerId(conn.getResourceDescriptor()) + " [" + conn.getRemoteSocketAddress().getAddress().getHostAddress() + "]");
+        }
     }
 
     @Override
