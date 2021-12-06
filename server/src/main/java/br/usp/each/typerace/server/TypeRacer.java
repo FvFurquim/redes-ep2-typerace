@@ -11,14 +11,12 @@ public class TypeRacer {
     private long initialTime;
     private long finalTime;
 
-    public TypeRacer(Set<String> players, String filePath, int numberOfWords, int maxScore) {
+    public TypeRacer(Set<String> players, int numberOfWords, int maxScore, WordListMaker wordListMaker) {
 
         this.scoreBoard = new HashMap<>();
         this.maxScore = maxScore;
         this.isGameFinished = false;
         this.initialTime = new Date().getTime();
-
-        WordListMaker wordListMaker = new WordListMaker(filePath);
 
         selectedWords = wordListMaker.selectWords(numberOfWords);
 

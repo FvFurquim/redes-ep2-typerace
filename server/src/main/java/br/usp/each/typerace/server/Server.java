@@ -152,7 +152,7 @@ public class Server extends WebSocketServer {
             return "";
         }
 
-        this.game = new TypeRacer(connections.keySet(), filePath, numberOfWords, maxScore);
+        this.game = new TypeRacer(connections.keySet(), numberOfWords, maxScore, new WordListFromFile(filePath));
 
         return game.getSelectedWordsAsString();
     }
