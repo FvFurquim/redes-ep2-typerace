@@ -85,6 +85,10 @@ public class TypeRacer {
         return scoreBoard.get(playerId).getCurrentWords();
     }
 
+    public String getWordsOfPlayerAsString(String playerId) {
+        return setToWordList(getWordsOfPlayer(playerId));
+    }
+
     public List<Player> getScoreBoard() {
 
         List<Player> sortedScore = new LinkedList<>(scoreBoard.values());
@@ -97,11 +101,25 @@ public class TypeRacer {
         return selectedWords;
     }
 
+    public String getSelectedWordsAsString() {
+        return setToWordList(getSelectedWords());
+    }
+
     public boolean isGameFinished() {
         return this.isGameFinished;
     }
 
     public long gameDuration() {
         return (this.finalTime - this.initialTime) / 1000;
+    }
+
+    public String setToWordList(Set<String> set) {
+
+        String wordList = "| ";
+        for (String word : set) {
+            wordList += word + " | ";
+        }
+
+        return wordList;
     }
 }
