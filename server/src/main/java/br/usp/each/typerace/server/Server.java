@@ -10,14 +10,12 @@ import java.util.Map;
 public class Server extends WebSocketServer {
 
     private final Map<String, WebSocket> connections;
-    private final String filePath;
     private TypeRacer game;
     private final String line = "----------------------------------------------------------";
 
     public Server(int port, Map<String, WebSocket> connections) {
         super(new InetSocketAddress(port));
         this.connections = connections;
-        filePath = System.getProperty("user.dir") + "\\src\\main\\resources\\listaDePalavras.txt";
     }
 
     @Override
@@ -152,6 +150,7 @@ public class Server extends WebSocketServer {
             return "";
         }
 
+        String filePath = System.getProperty("user.dir") + "\\src\\main\\resources\\listaDePalavras.txt";
         this.game = new TypeRacer(connections.keySet(), numberOfWords, maxScore, new WordListFromFile(filePath));
 
         return game.getSelectedWordsAsString();
