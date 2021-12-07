@@ -60,6 +60,7 @@ public class ClientMain {
             }
         }
 
+        // Esse loop vai pegar todas as tentativas de respostas do jogador e enviar ao serivdor
         while(true) {
             String in = input.readLine();
             client.send(in);
