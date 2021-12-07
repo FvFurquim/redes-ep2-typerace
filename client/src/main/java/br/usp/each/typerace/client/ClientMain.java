@@ -18,7 +18,7 @@ public class ClientMain {
     }
 
     public void init(String idCliente) {
-//        System.out.println("Iniciando cliente: " + idCliente);
+        // System.out.println("Iniciando cliente: " + idCliente);
         client.connect();
     }
 
@@ -33,8 +33,8 @@ public class ClientMain {
         if (serverUri.isEmpty())
             serverUri = "ws://localhost:8080";
 
-        //Esse while serve para tentar pegar o nome do usuario
-        //Enquanto ele nao tiver feito uma conexao com sucesso, ele permanece no loop
+        // Esse while serve para tentar pegar o nome do usuario
+        // Enquanto ele nao tiver feito uma conexao com sucesso, ele permanece no loop
         while(true) {
             System.out.println("Nome de Usuario: ");
             String username = input.readLine();
@@ -54,7 +54,7 @@ public class ClientMain {
 
             TimeUnit.SECONDS.sleep(1);
 
-            //Se o playerId estiver repetido, a conexao sera encerrada imediatamente, portanto, ele continua nesse loop pedindo entrada
+            // Se o playerId estiver repetido, a conexao sera encerrada imediatamente, portanto, ele continua nesse loop pedindo entrada
             if(client.isOpen()) {
                 break;
             }

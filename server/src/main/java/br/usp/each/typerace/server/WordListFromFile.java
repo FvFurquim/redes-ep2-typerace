@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.*;
 
-//Essa classe le e seleciona palavras de um arquivo
+// Essa classe le e seleciona palavras de um arquivo
 
 public class WordListFromFile implements WordListMaker {
 
@@ -13,8 +13,8 @@ public class WordListFromFile implements WordListMaker {
 
     public WordListFromFile(String filePath) {
 
-        //Checa se esse arquivo ja foi utilizado anteriormente para selecionar palavras
-        //Isso poupa tempo de processamento desnecessario, caso a lista carregada seja a mesma
+        // Checa se esse arquivo ja foi utilizado anteriormente para selecionar palavras
+        // Isso poupa tempo de processamento desnecessario, caso a lista carregada seja a mesma
         if (!filePath.equals(WordListFromFile.filePath)) {
             WordListFromFile.filePath = filePath;
             allWords = new ArrayList<>();
@@ -33,8 +33,8 @@ public class WordListFromFile implements WordListMaker {
         }
     }
 
-    //Vai selecionar uma quantidade numberOfWords de palavras aleatorias e adicionar num set
-    //Essas palavras serao utilizadas para o jogo
+    // Vai selecionar uma quantidade numberOfWords de palavras aleatorias e adicionar num set
+    // Essas palavras serao utilizadas para o jogo
     public Set<String> selectWords(int numberOfWords) {
 
         Set<String> selectedWords = new HashSet<>();
@@ -44,7 +44,7 @@ public class WordListFromFile implements WordListMaker {
             int randNum = rand.nextInt(allWords.size());
             String selectedWord = allWords.get(randNum);
 
-            //Esse if impede que palavras repetidas sejam selecionadas
+            // Esse if impede que palavras repetidas sejam selecionadas
             if (!selectedWords.contains(selectedWord)) {
                 selectedWords.add(selectedWord);
                 i++;
