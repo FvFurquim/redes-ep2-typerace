@@ -13,7 +13,7 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-//        send("###Nova conexao!###");
+        send("###Nova conexao feita com sucesso###");
 //        System.out.println("\n----------------------------------------------------------\nVoce entrou na sala!");
     }
 

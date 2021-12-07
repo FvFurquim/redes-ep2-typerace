@@ -2,6 +2,8 @@ package br.usp.each.typerace.server;
 
 import java.util.*;
 
+//Essa classe faz todo o trabalho do jogo que inclui: armazenar palavras, checar acertos e armazenar a pontuacao
+
 public class TypeRacer {
 
     private final Map<String, Player> scoreBoard;
@@ -18,8 +20,10 @@ public class TypeRacer {
         this.isGameFinished = false;
         this.initialTime = new Date().getTime();
 
+        //Pega um Set de palavras atraves do WordListMaker passado pelo parametro
         selectedWords = wordListMaker.selectWords(numberOfWords);
 
+        //Armazena uma copia do Set de palavras em cada jogador
         for (String playerId : players) {
             scoreBoard.put(playerId, new Player(playerId, 0, 0, new HashSet<>(selectedWords)));
         }
@@ -29,10 +33,7 @@ public class TypeRacer {
 
         Player player = scoreBoard.get(playerId);
 
-        if(player.getCurrentWords().contains(answer.toUpperCase())){
-            player.rightAnswer();
-            player.getCurrentWords().remove(answer.toUpperCase());
-
+        if(player.checkAnswer(answer)){
             if(player.getCorrect() == maxScore) {
                 isGameFinished = true;
                 finalTime = new Date().getTime();
@@ -41,7 +42,6 @@ public class TypeRacer {
             return true;
         }
 
-        player.wrongAnswer();
         return false;
     }
 
@@ -53,6 +53,7 @@ public class TypeRacer {
         return setToWordList(getWordsOfPlayer(playerId));
     }
 
+    //Esse metodo retorna uma lista ordenada dos jogadores de acordo com sua pontuacao
     public List<Player> getScoreBoard() {
 
         List<Player> sortedScore = new LinkedList<>(scoreBoard.values());

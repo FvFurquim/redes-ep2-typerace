@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class ClientMain {
@@ -34,6 +33,8 @@ public class ClientMain {
         if (serverUri.isEmpty())
             serverUri = "ws://localhost:8080";
 
+        //Esse while serve para tentar pegar o nome do usuario
+        //Enquanto ele nao tiver feito uma conexao com sucesso, ele permanece no loop
         while(true) {
             System.out.println("Nome de Usuario: ");
             String username = input.readLine();
@@ -47,13 +48,13 @@ public class ClientMain {
             connectionUri += "/playerId=" + username;
 
             client = new Client(new URI(connectionUri));
-
             ClientMain main = new ClientMain(client);
 
             main.init(username);
 
             TimeUnit.SECONDS.sleep(1);
 
+            //Se o playerId estiver repetido, a conexao sera encerrada imediatamente, portanto, ele continua nesse loop pedindo entrada
             if(client.isOpen()) {
                 break;
             }

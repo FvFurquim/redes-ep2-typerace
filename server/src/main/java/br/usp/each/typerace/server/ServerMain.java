@@ -24,6 +24,8 @@ public class ServerMain {
 
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
+        //Pede para o usuario do servidor especificar a porta
+        //Se nenhuma porta for especificada, ele ira para a porta 8080
         System.out.println("Porta do servidor [default: 8080]: ");
         String portStr = input.readLine();
 
