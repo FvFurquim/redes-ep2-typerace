@@ -19,9 +19,15 @@ public class TypeRacer {
         this.maxScore = maxScore;
         this.isGameFinished = false;
         this.initialTime = new Date().getTime();
+        this.selectedWords = new HashSet<>();
 
         // Pega um Set de palavras atraves do WordListMaker passado pelo parametro
-        selectedWords = wordListMaker.selectWords(numberOfWords);
+        Set<String> tempSet = wordListMaker.selectWords(numberOfWords);
+
+        // Para evitar problemas de case, esse loop esta deixando todas as palavras maiusculas
+        for(String word : tempSet) {
+            selectedWords.add(word.toUpperCase());
+        }
 
         // Armazena uma copia do Set de palavras em cada jogador
         for (String playerId : players) {
