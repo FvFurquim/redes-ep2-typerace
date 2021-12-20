@@ -153,9 +153,11 @@ public class Server extends WebSocketServer {
 
         broadcast("\n" + line + "\n" + playerId + " entrou na sala!" + "\nNumero de jogadores: " + numberOfConnections() + "\n" + line);
 
-        conn.send("Bem-vindo a Corridona de Digitacao do Balacubaco!\nRegras:\n" +
-                "- Palavras podem ser maiusculas ou minusculas\n- Envie uma palavra por vez\n- Vence quem atingir a pontuacao maxima primeiro" +
-                "\n- Palavras erradas nao tiram ponto\n\nComandos:\n- Digite \"Iniciar [quantidade de palavras] [pontuacao maxima]\" para comecar\n- Digite \"Sair\" fora de uma partida para sair da sala\n\n- Divirta-se :)\n" + line);
+        conn.send("Bem-vindo a Corridona de Digitacao do Balacubaco!\nRegras:\n- Vence quem atingir a pontuacao maxima primeiro" +
+                "\n- Envie uma palavra por vez\n- Nao ha ordem especifica para enviar palavras\n- Palavras podem ser maiusculas ou minusculas" +
+                "\n- Palavras erradas nao tiram ponto\n\nComandos:" +
+                "\n- Digite \"Iniciar [quantidade de palavras] [pontuacao maxima]\" para comecar\n- Digite \"Sair\" fora de uma partida para sair da sala" +
+                "\n\n- Divirta-se :)\n" + line);
 
         System.out.println("Nova conexao: " + playerId + " [" + conn.getRemoteSocketAddress().getAddress().getHostAddress() + "]");
     }

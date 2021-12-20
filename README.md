@@ -21,11 +21,12 @@ Para rodar um cliente
 ./gradlew client:run
 ```
 ### Regras do Jogo
-* Palavras podem ser maiusculas ou minusculas
+* Vence quem atingir a pontuação máxima primeiro
 * Envie uma palavra por vez
-* Vence quem atingir a pontuacao maxima primeiro
-* Palavras erradas nao tiram ponto
+* Não há ordem específica para enviar palavras
+* Palavras podem ser maiúsculas ou minúsculas
+* Palavras erradas não tiram ponto
 * Comandos:
-  * Digite "Iniciar [quantidade de palavras] [pontuacao maxima]" para comecar
+  * Digite "Iniciar [quantidade de palavras] [pontuacao maxima]" para começar
   * Digite "Sair" fora de uma partida para sair da sala
 * Divirta-se :)
